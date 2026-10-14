@@ -1,0 +1,19 @@
+package com.example.exsession04.Models.Services;
+
+import com.example.exsession04.Models.Entities.Student;
+import com.example.exsession04.Models.Repositories.StudentRepository;
+import com.example.exsession04.Models.Request.StudentCreateRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class StudentService {
+    private final StudentRepository studentRepository;
+    public Student createStudent(StudentCreateRequest req) {
+        Student student = new Student();
+        student.setName(req.getName());
+        student.setEmail(req.getEmail());
+        return studentRepository.save(student);
+    }
+}
