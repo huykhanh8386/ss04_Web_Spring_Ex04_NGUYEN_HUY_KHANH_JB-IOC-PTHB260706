@@ -1,0 +1,42 @@
+package com.example.exsession04.Models.Services;
+
+import com.example.exsession04.Models.Entities.Course;
+import com.example.exsession04.Models.Entities.Instructor;
+import com.example.exsession04.Models.Repositories.CourseRepository;
+import com.example.exsession04.Models.Repositories.InstructorRepository;
+import com.example.exsession04.Models.Request.CourseCreateRequest;
+import com.example.exsession04.Models.Request.CourseUpdateRequest;
+import com.example.exsession04.Models.Request.StudentEnrollmentRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CourseService {
+    private final CourseRepository courseRepository;
+    private final InstructorRepository instructorRepository;
+    public List<Course> findAllCourses() {
+        return courseRepository.findAll();
+    }
+    public Course findCourseById(Long id) {
+        return courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
+    }
+    public Course createCourse(CourseCreateRequest req) {
+        Instructor instructor = instructorRepository.findById(req.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found"));
+        Course course = new Course();
+        course.setTitle(req.getTitle());
+        course.setStatus(req.getStatus());
+        course.setInstructor(instructor);
+        return courseRepository.save(course);
+    }
+    public Course updateCourse(Long id, CourseUpdateRequest req) {
+        Course course = courseRepository.findById(id).orElseThrow(() -> new RuntimeException("Course not found"));
+        Instructor instructor = instructorRepository.findById(req.getInstructorId()).orElseThrow(() -> new RuntimeException("Instructor not found"));
+        course.setTitle(req.getTitle());
+        course.setStatus(req.getStatus());
+        course.setInstructor(instructor);
+        return courseRepository.save(course);
+    }
+}
