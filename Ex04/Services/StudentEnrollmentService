@@ -1,0 +1,26 @@
+package com.example.exsession04.Models.Services;
+
+import com.example.exsession04.Models.Entities.Course;
+import com.example.exsession04.Models.Entities.Student;
+import com.example.exsession04.Models.Entities.StudentEnrollment;
+import com.example.exsession04.Models.Repositories.CourseRepository;
+import com.example.exsession04.Models.Repositories.StudentEnrollmentRepository;
+import com.example.exsession04.Models.Repositories.StudentRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class StudentEnrollmentService {
+    private final StudentEnrollmentRepository studentEnrollmentRepository;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
+    public StudentEnrollment enrollment(Long studentId, Long courseId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
+        StudentEnrollment studentEnrollment = new StudentEnrollment();
+        studentEnrollment.setStudent(student);
+        studentEnrollment.setCourse(course);
+        return studentEnrollmentRepository.save(studentEnrollment);
+    }
+}
